@@ -14,8 +14,8 @@ MKDMG=		hdiutil create
 TOUCH=		@date >
 UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(TITLE).sh
 
-# make without action build a complete package
-all: package
+# make without action build and install
+all: install
 
 # About this package
 about:
@@ -78,7 +78,9 @@ packageclean:
 buildclean:
 	rm -rf build prep $(TITLE)
 
+retriveclean:
+	rm -f retrive $(SOURCE)
+
 clean: packageclean buildclean
 
-distclean: clean
-	rm -rf retrive archive $(SOURCE) ../../packages/$(TITLE).pkg.zip
+distclean: clean archiveclean dmgclean retriveclean
