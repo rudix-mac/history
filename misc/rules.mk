@@ -10,6 +10,7 @@ CONTENTS=	$(CWD)/contents
 RESOURCES=	$(CWD)/resources
 PACKAGEMAKER=	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build
 ARCHIVER=	zip -r -0
+MKDMG=		hdiutil create
 TOUCH=		@date >
 UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(TITLE).sh
 
@@ -30,8 +31,9 @@ help:
 	@echo "  build		configure software and then build it"
 	@echo "  install	install software into a directory"
 	@echo "  package	create a package (.pkg)"
-	@echo "  archive	archive the package for distribution"
-	@echo "  all		retrive, prep, build, install and pakage together"
+	@echo "  dmg		create a disk image (.dmg)"
+	@echo "  archive	archive (zip) the package for distribution"
+	@echo "  all		do retrive, prep, build, install and package together"
 	@echo "  clean"
 	@echo "  distclean"
 
@@ -40,6 +42,11 @@ plist:
 	sed "s/@TITLE@/$(TITLE)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Info.plist.in > Info.plist
 	sed "s/@DESCRIPTION@/$(DESCRIPTION)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Description.plist.in > Description.plist
 	$(TOUCH) plist
+
+# DMG image
+dmg: package
+	$(MKDMG) -srcfolder $(TITLE).pkg ../../packages/$(TITLE)
+	touch dmg
 
 # Archive package for distribution
 archive: package
