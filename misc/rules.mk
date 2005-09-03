@@ -65,6 +65,9 @@ uninstaller: install
 	$(TOUCH) uninstaller
 
 # Cleanup
+dmgclean:
+	rm -f dmg ../../packages/$(TITLE).dmg
+
 archiveclean:
 	rm -f archive ../../packages/$(TITLE).pkg.zip
 
