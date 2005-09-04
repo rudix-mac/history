@@ -5,6 +5,7 @@
 #
 
 # Don't need to modify in most of the cases
+FLAVOR=		panther
 CWD:=		$(shell pwd)
 CONTENTS=	$(CWD)/contents
 RESOURCES=	$(CWD)/resources
@@ -45,12 +46,12 @@ plist:
 
 # DMG image
 dmg: package
-	$(MKDMG) -srcfolder $(TITLE).pkg ../../packages/$(TITLE)
+	$(MKDMG) -srcfolder $(TITLE).pkg ../../packages/$(TITLE)_$(FLAVOR)
 	touch dmg
 
 # Archive package for distribution
 archive: package
-	$(ARCHIVER) ../../packages/$(TITLE).pkg.zip $(TITLE).pkg
+	$(ARCHIVER) ../../packages/$(TITLE)_$(FLAVOR).pkg.zip $(TITLE).pkg
 	$(TOUCH) archive
 
 uninstaller: install
@@ -66,10 +67,10 @@ uninstaller: install
 
 # Cleanup
 dmgclean:
-	rm -f dmg ../../packages/$(TITLE).dmg
+	rm -f dmg ../../packages/$(TITLE)_$(FLAVOR).dmg
 
 archiveclean:
-	rm -f archive ../../packages/$(TITLE).pkg.zip
+	rm -f archive ../../packages/$(TITLE)_$(FLAVOR).pkg.zip
 
 packageclean:
 	rm -rf package install plist uninstaller $(TITLE).pkg $(RESOURCES) Info.plist Description.plist
