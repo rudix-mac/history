@@ -72,7 +72,7 @@ dmgclean:
 archiveclean:
 	rm -f archive ../../packages/$(TITLE)_$(FLAVOR).pkg.zip
 
-packageclean:
+pkgclean:
 	rm -rf package install plist uninstaller $(TITLE).pkg $(RESOURCES) Info.plist Description.plist
 	sudo sudo rm -rf $(CONTENTS)
 
@@ -82,6 +82,6 @@ buildclean:
 retriveclean:
 	rm -f retrive $(SOURCE)
 
-clean: packageclean buildclean
+clean: pkgclean buildclean
 
 distclean: clean archiveclean dmgclean retriveclean
