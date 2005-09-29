@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleGetInfoString</key>
-	<string>@TITLE@</string>
+	<string>@PACKAGE@</string>
 	<key>CFBundleIdentifier</key>
 	<string>rudix.pkg.@NAME@</string>
 	<key>CFBundleName</key>
