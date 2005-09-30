@@ -2,33 +2,25 @@ include ../../misc/rules.mk
 
 NAME=		nmap
 VERSION=	3.93
-TITLE=		$(NAME)-$(VERSION)
 URL=		http://download.insecure.org/nmap/dist/
-SOURCE=		$(TITLE).tar.bz2
+SOURCE=		$(PACKAGE).tar.bz2
 DESCRIPTION=	Nmap is a free open source utility for network exploration or security auditing.
 MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
-
-retrive:
-	curl -O $(URL)/$(SOURCE)
-	$(TOUCH) retrive
 
 prep: retrive
 	tar jxvf $(SOURCE)
 	$(TOUCH) prep
 
 build: prep
-	cd $(TITLE) ; ./configure ; make
+	cd $(PACKAGE) ; ./configure ; make
 	$(TOUCH) build
 
 install: build
 	mkdir -p $(CONTENTS)
-	cd $(TITLE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
 	$(TOUCH) install
 
-package: install plist uninstaller
+resources:
 	mkdir -p $(RESOURCES)
-	cp -f $(TITLE)/COPYING $(RESOURCES)/License.txt
-	cp -f $(TITLE)/docs/README $(RESOURCES)/ReadMe.txt
-	sudo chown -R root:wheel $(CONTENTS)
-	$(PACKAGEMAKER) -p $(CWD)/$(TITLE).pkg -f $(CONTENTS) -r $(RESOURCES) -i Info.plist -d Description.plist
-	$(TOUCH) package
+	cp -f $(PACKAGE)/COPYING $(RESOURCES)/License.txt
+	cp -f $(PACKAGE)/docs/README $(RESOURCES)/ReadMe.txt
