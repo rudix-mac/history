@@ -10,10 +10,11 @@ MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 prep: retrive
 	tar jxvf $(SOURCE)
 	mv lynx2-8-5 $(PACKAGE)
+	cd $(PACKAGE) ; patch -b < ../lynx.cfg.patch
 	$(TOUCH) prep
 
 build: prep
-	cd $(PACKAGE) ; ./configure ; make
+	cd $(PACKAGE) ; ./configure --with-ssl ; make
 	$(TOUCH) build
 
 install: build
