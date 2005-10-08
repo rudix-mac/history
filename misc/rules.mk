@@ -6,6 +6,7 @@
 
 # Don't need to modify in most of the cases
 CWD:=		$(shell pwd)
+MYID=		$(shell id -u)
 PACKAGE=	$(NAME)-$(VERSION)
 CONTENTS=	$(CWD)/contents
 RESOURCES=	$(CWD)/resources
@@ -15,7 +16,7 @@ CREATEDMG=	hdiutil create
 TOUCH=		@date >
 UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(PACKAGE).sh
 
-# make without action build and install
+# Make without any action build and then install
 all: install
 
 # About this package
@@ -31,12 +32,13 @@ help:
 	@echo "  prep		explode source, apply patches, etc"
 	@echo "  build		configure software and then build it"
 	@echo "  install	install software into a directory"
-	@echo "  pkg	create a package (.pkg)"
+	@echo "  pkg		create a package (.pkg)"
 	@echo "  dmg		create a disk image (.dmg)"
 	@echo "  zip		zip package for distribution (.pkg.zip)"
 	@echo "  all		do retrive, prep, build and install"
 	@echo "  clean"
 	@echo "  distclean"
+	@echo "without any action make build and then install"
 
 retrive:
 	curl -O $(URL)/$(SOURCE)
@@ -53,8 +55,11 @@ resources:
 	cp -f $(PACKAGE)/COPYING $(RESOURCES)/License.txt
 	cp -f $(PACKAGE)/README $(RESOURCES)/ReadMe.txt
 
-pkg: install plist uninstaller resources
-	sudo chown -R root:wheel $(CONTENTS)
+isroot:
+	@if [ "$(MYID)" != "0" ] ; then echo "root or sudo required for that" ; false ; fi
+
+pkg: isroot install plist uninstaller resources
+	chown -R root:wheel $(CONTENTS)
 	$(PACKAGEMAKER) -p $(CWD)/$(PACKAGE).pkg -f $(CONTENTS) -r $(RESOURCES) -i Info.plist -d Description.plist
 	$(TOUCH) pkg
 
@@ -86,9 +91,11 @@ dmgclean:
 zipclean:
 	rm -f zip ../../packages/$(PACKAGE).pkg.zip
 
-pkgclean:
-	rm -rf pkg install plist uninstaller $(PACKAGE).pkg $(RESOURCES) Info.plist Description.plist
-	sudo sudo rm -rf $(CONTENTS)
+pkgclean: isroot
+	rm -rf pkg $(PACKAGE).pkg
+
+installclean: isroot
+	rm -rf install plist uninstaller $(CONTENTS) $(RESOURCES) Info.plist Description.plist
 
 buildclean:
 	rm -rf build prep $(PACKAGE)
@@ -96,6 +103,6 @@ buildclean:
 retriveclean:
 	rm -f retrive $(SOURCE)
 
-clean: pkgclean buildclean
+clean: pkgclean installclean buildclean
 
 distclean: clean zipclean dmgclean retriveclean
