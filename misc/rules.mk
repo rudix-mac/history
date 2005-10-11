@@ -15,6 +15,7 @@ ZIP=		zip -r -0
 CREATEDMG=	hdiutil create
 TOUCH=		@date >
 UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(PACKAGE).sh
+WGET=		curl -O
 
 # Make without any action build and then install
 all: install
@@ -41,7 +42,7 @@ help:
 	@echo "without any action make build and then install"
 
 retrive:
-	curl -O $(URL)/$(SOURCE)
+	$(WGET) $(URL)/$(SOURCE)
 	$(TOUCH) retrive
 
 # Package's meta-information
