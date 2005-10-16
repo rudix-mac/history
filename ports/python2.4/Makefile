@@ -19,7 +19,7 @@ build: prep
 install: build
 	mkdir -p $(CONTENTS)
 	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
-	cd $(CONTENTS)/usr/local/bin ; rm python idle smtpd.py ; mv pydoc pydoc2.4
+	cd $(CONTENTS)/usr/local/bin ; rm python idle smtpd.py pydoc
 	cd $(CONTENTS)/usr/local/man/man1 ; mv python.1 python2.4.1
 	$(TOUCH) install
 
