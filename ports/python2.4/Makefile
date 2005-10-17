@@ -4,7 +4,7 @@ NAME=		python
 VERSION=	2.4.2
 URL=		http://python.org/ftp/python/2.4.2/
 SOURCE=		Python-$(VERSION).tar.bz2
-DESCRIPTION=	Acts as a caching pre-processor to C or C++ compilers.
+DESCRIPTION=	Python is an interpreted object-oriented programming language.
 MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 
 prep: retrive
