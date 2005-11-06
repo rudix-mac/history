@@ -1,3 +1,5 @@
+# $Id: Makefile,v 1.1 2005/11/06 22:13:35 ruda Exp $
+
 include ../../misc/rules.mk
 
 NAME=		python

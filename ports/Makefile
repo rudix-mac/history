@@ -1,4 +1,4 @@
-DIRS=${shell echo [a-z]*}
+DIRS=	[a-z]*
 
 retrive:
 	for i in $(DIRS) ; do ( cd $${i} ; make retrive ) ; done
