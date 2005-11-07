@@ -1,3 +1,5 @@
+# $Id: Makefile,v 1.2 2005/11/07 23:44:16 ruda Exp $
+
 include ../../misc/rules.mk
 
 NAME=		pdksh
