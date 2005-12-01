@@ -66,12 +66,12 @@ pkg: isroot install plist uninstaller resources
 
 # DMG image
 dmg: pkg
-	$(CREATEDMG) -srcfolder $(PACKAGE).pkg ../../packages/$(PACKAGE)
+	$(CREATEDMG) -srcfolder $(PACKAGE).pkg $(PACKAGE)
 	touch dmg
 
 # Archive package for distribution
 zip: pkg
-	$(ZIP) ../../packages/$(PACKAGE).pkg.zip $(PACKAGE).pkg
+	$(ZIP) $(PACKAGE).pkg.zip $(PACKAGE).pkg
 	$(TOUCH) zip
 
 uninstaller: install
@@ -87,10 +87,10 @@ uninstaller: install
 
 # Cleanup
 dmgclean:
-	rm -f dmg ../../packages/$(PACKAGE).dmg
+	rm -f dmg $(PACKAGE).dmg
 
 zipclean:
-	rm -f zip ../../packages/$(PACKAGE).pkg.zip
+	rm -f zip $(PACKAGE).pkg.zip
 
 pkgclean: isroot
 	rm -rf pkg $(PACKAGE).pkg
