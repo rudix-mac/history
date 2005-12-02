@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.2 2005/11/07 23:44:16 ruda Exp $
+# $Id: Makefile,v 1.3 2005/12/02 02:36:12 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -7,7 +7,6 @@ VERSION=	1.9.15
 URL=		ftp://ftp.dict.org/pub/dict/
 SOURCE=		$(PACKAGE).tar.gz
 DESCRIPTION=	Dict is a client for the Dictionary Server Protocol (DICT).
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 
 prep: retrive
 	tar zxvf $(SOURCE)
@@ -18,6 +17,5 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install

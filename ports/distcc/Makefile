@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.1 2005/12/01 02:26:19 ruda Exp $
+# $Id: Makefile,v 1.2 2005/12/02 02:37:03 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -9,7 +9,7 @@ SOURCE=		$(PACKAGE).tar.bz2
 DESCRIPTION=	distcc is a program to distribute builds of C, C++, Objective C or Objective C++ code across several machines on a network.
 
 prep: retrive
-	tar zxvf $(SOURCE) | tar jxvf $(SOURCE)
+	tar jxvf $(SOURCE)
 	$(TOUCH) prep
 
 build: prep
@@ -17,6 +17,5 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install
