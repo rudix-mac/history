@@ -4,20 +4,25 @@
 # This software is licensed under GPL, see COPYING.txt
 #
 
-# Don't need to modify in most of the cases
 CWD:=		$(shell pwd)
-MYID=		$(shell id -u)
 PACKAGE=	$(NAME)-$(VERSION)
-CONTENTS=	$(CWD)/contents
-RESOURCES=	$(CWD)/resources
+INSTALLDIR=	$(CWD)/$(PACKAGE)-root
+CONTENTS=	$(CWD)/contents.tmp
+RESOURCES=	$(CWD)/resources.tmp
+
 PACKAGEMAKER=	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build
 ZIP=		zip -r -0
 CREATEDMG=	hdiutil create
+#TOUCH=		touch
 TOUCH=		@date >
-UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(PACKAGE).sh
+#$WGET=		wget
 WGET=		curl -O
+UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(PACKAGE).sh
 
-# Make without any action build and then install
+README=		README
+LICENSE=	COPYING
+
+# Make without any action does prep, build and then install
 all: install
 
 # About this package
@@ -28,56 +33,54 @@ about:
 help:
 	@echo "make <action> where action is:"
 	@echo "  help		this help"
-	@echo "  about		short description about the package"
+	@echo "  about		description about the package"
 	@echo "  retrive	retrive all files necessary to compile"
 	@echo "  prep		explode source, apply patches, etc"
 	@echo "  build		configure software and then build it"
-	@echo "  install	install software into a directory"
+	@echo "  install	install software into directory $(INTALLDIR)"
 	@echo "  pkg		create a package (.pkg)"
 	@echo "  dmg		create a disk image (.dmg)"
 	@echo "  zip		zip package for distribution (.pkg.zip)"
-	@echo "  all		do retrive, prep, build and install"
+	@echo "  all		does prep, build and then install"
 	@echo "  clean"
 	@echo "  distclean"
-	@echo "without any action make build and then install"
+	@echo "make without any action does 'make install'"
 
 retrive:
 	$(WGET) $(URL)/$(SOURCE)
 	$(TOUCH) retrive
 
-# Package's meta-information
-plist:
-	sed "s/@PACKAGE@/$(PACKAGE)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Info.plist.in > Info.plist
-	sed "s/@DESCRIPTION@/$(DESCRIPTION)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Description.plist.in > Description.plist
-	$(TOUCH) plist
-
 resources:
 	mkdir -p $(RESOURCES)
-	cp -f $(PACKAGE)/COPYING $(RESOURCES)/License.txt
-	cp -f $(PACKAGE)/README $(RESOURCES)/ReadMe.txt
+	cp -f $(PACKAGE)/$(LICENSE) $(RESOURCES)/License.txt
+	cp -f $(PACKAGE)/$(README) $(RESOURCES)/ReadMe.txt
+	sed "s/@PACKAGE@/$(PACKAGE)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Info.plist.in > $(RESOURCES)/Info.plist
+	sed "s/@DESCRIPTION@/$(DESCRIPTION)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Description.plist.in > $(RESOURCES)/Description.plist
+	$(TOUCH) resources
 
-isroot:
-	@if [ "$(MYID)" != "0" ] ; then echo "root or sudo required for that" ; false ; fi
-
-pkg: isroot install plist uninstaller resources
+contents: install
+	mkdir -p $(CONTENTS)
+	rsync -av $(INSTALLDIR)/ $(CONTENTS)
 	chown -R root:wheel $(CONTENTS)
-	$(PACKAGEMAKER) -p $(CWD)/$(PACKAGE).pkg -f $(CONTENTS) -r $(RESOURCES) -i Info.plist -d Description.plist
+	$(TOUCH) contents
+	
+pkg: contents resources uninstaller
+	chown -R root:wheel $(CONTENTS)
+	$(PACKAGEMAKER) -p $(CWD)/$(PACKAGE).pkg -f $(CONTENTS) -r $(RESOURCES) -i $(RESOURCES)/Info.plist -d $(RESOURCES)/Description.plist
 	$(TOUCH) pkg
 
-# DMG image
 dmg: pkg
 	$(CREATEDMG) -srcfolder $(PACKAGE).pkg $(PACKAGE)
-	touch dmg
+	$(TOUCH) dmg
 
-# Archive package for distribution
 zip: pkg
 	$(ZIP) $(PACKAGE).pkg.zip $(PACKAGE).pkg
 	$(TOUCH) zip
 
-uninstaller: install
+uninstaller: contents
 	mkdir -p $(CONTENTS)/usr/local/sbin
 	echo "#!/bin/sh" > $(UNINSTALLER)
-	echo "echo Uninstaller script for $(PACKAGE) package" >> $(UNINSTALLER)
+	echo "echo Running unintaller script for $(PACKAGE) package" >> $(UNINSTALLER)
 	echo "rm -rf  /Library/Receipts/$(PACKAGE).pkg" >> $(UNINSTALLER)
 	cd $(CONTENTS) ; \
 	find . \! -type d -exec echo "rm -f {}" \; >> $(UNINSTALLER) ; \
@@ -85,25 +88,24 @@ uninstaller: install
 	mv $(UNINSTALLER).new $(UNINSTALLER) ; chmod +x $(UNINSTALLER)
 	$(TOUCH) uninstaller
 
-# Cleanup
 dmgclean:
 	rm -f dmg $(PACKAGE).dmg
 
 zipclean:
 	rm -f zip $(PACKAGE).pkg.zip
 
-pkgclean: isroot
-	rm -rf pkg $(PACKAGE).pkg
+pkgclean:
+	rm -rf contents resources uninstaller pkg $(PACKAGE).pkg $(CONTENTS) $(RESOURCES)
 
-installclean: isroot
-	rm -rf install plist uninstaller $(CONTENTS) $(RESOURCES) Info.plist Description.plist
+installclean:
+	rm -rf install $(INSTALLDIR)
 
 buildclean:
-	rm -rf build prep $(PACKAGE)
+	rm -rf prep build $(PACKAGE)
 
 retriveclean:
 	rm -f retrive $(SOURCE)
 
-clean: pkgclean installclean buildclean
+clean: installclean buildclean
 
-distclean: clean zipclean dmgclean retriveclean
+distclean: clean zipclean dmgclean retriveclean pkgclean

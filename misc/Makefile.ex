@@ -14,7 +14,6 @@ SOURCE=		$(PACKAGE).tar.gz
 #SOURCE=	$(PACKAGE).tar.bz2
 #SOURCE=	$(PACKAGE).zip
 DESCRIPTION=	A template to use for new ports to Rudix.
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 
 # Prepate software to build (explode archive, apply patches, etc)
 prep: retrive
@@ -31,6 +30,5 @@ build: prep
 
 # Install software in a directory tree
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install
