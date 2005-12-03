@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.3 2005/11/07 23:44:16 ruda Exp $
+# $Id: Makefile,v 1.4 2005/12/03 03:12:55 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -7,7 +7,8 @@ VERSION=	3.93
 URL=		http://download.insecure.org/nmap/dist/
 SOURCE=		$(PACKAGE).tar.bz2
 DESCRIPTION=	Nmap is a free open source utility for network exploration or security auditing.
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
+LICENSE=	$(PACKAGE)/COPYING
+README=		$(PACKAGE)/docs/README
 
 prep: retrive
 	tar jxvf $(SOURCE)
@@ -18,11 +19,5 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install
-
-resources:
-	mkdir -p $(RESOURCES)
-	cp -f $(PACKAGE)/COPYING $(RESOURCES)/License.txt
-	cp -f $(PACKAGE)/docs/README $(RESOURCES)/ReadMe.txt
