@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.2 2005/11/07 23:44:16 ruda Exp $
+# $Id: Makefile,v 1.3 2005/12/03 23:08:44 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -9,8 +9,9 @@ SOURCE=		$(PACKAGE).tar.gz
 PATCH1=		$(PACKAGE)-patches.1
 PATCH2=		$(PACKAGE)-patches.2
 DESCRIPTION=	PD-ksh is a clone of the AT&T Korn shell
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 WGET=		curl -O --disable-epsv
+LICENSE=	$(PACKAGE)/LEGAL
+README=		$(PACKAGE)/README
 
 retrive:
 	$(WGET) $(URL)/$(SOURCE)
@@ -28,14 +29,8 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make prefix=$(CONTENTS)/usr/local install
+	cd $(PACKAGE) ; make prefix=$(INSTALLDIR)/usr/local install
 	$(TOUCH) install
-
-resources:
-	mkdir -p $(RESOURCES)
-	cp -f $(PACKAGE)/LEGAL $(RESOURCES)/License.txt
-	cp -f $(PACKAGE)/README $(RESOURCES)/ReadMe.txt
 
 retriveclean:
 	rm -f retrive $(SOURCE) $(PATCH1) $(PATCH2)
