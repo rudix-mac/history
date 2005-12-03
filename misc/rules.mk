@@ -19,8 +19,8 @@ TOUCH=		@date >
 WGET=		curl -O
 UNINSTALLER=	$(CONTENTS)/usr/local/sbin/uninstall-$(PACKAGE).sh
 
-README=		README
-LICENSE=	COPYING
+README=		$(PACKAGE)/README
+LICENSE=	$(PACKAGE)/COPYING
 
 # Make without any action does prep, build and then install
 all: install
@@ -52,8 +52,8 @@ retrive:
 
 resources:
 	mkdir -p $(RESOURCES)
-	cp -f $(PACKAGE)/$(LICENSE) $(RESOURCES)/License.txt
-	cp -f $(PACKAGE)/$(README) $(RESOURCES)/ReadMe.txt
+	cp -f $(LICENSE) $(RESOURCES)/License.txt
+	cp -f $(README) $(RESOURCES)/ReadMe.txt
 	sed "s/@PACKAGE@/$(PACKAGE)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Info.plist.in > $(RESOURCES)/Info.plist
 	sed "s/@DESCRIPTION@/$(DESCRIPTION)/g ; s/@NAME@/$(NAME)/g ; s/@VERSION@/$(VERSION)/g" ../../misc/Description.plist.in > $(RESOURCES)/Description.plist
 	$(TOUCH) resources
