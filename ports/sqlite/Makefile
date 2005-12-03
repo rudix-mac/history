@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.1 2005/11/07 01:24:26 ruda Exp $
+# $Id: Makefile,v 1.2 2005/12/03 03:59:19 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -7,7 +7,8 @@ VERSION=	3.2.7
 URL=		http://www.sqlite.org/
 SOURCE=		$(PACKAGE).tar.gz
 DESCRIPTION=	SQLite is a small C library that implements a self-contained, embeddable, zero-configuration SQL database engine.
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
+LICENSE=	copyright-release.html
+README=		$(PACKAGE)/README
 
 prep: retrive
 	tar zxvf $(SOURCE)
@@ -19,6 +20,5 @@ build: prep /Library/Receipts/readline-5.0.pkg
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install
