@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.2 2005/11/07 01:24:26 ruda Exp $
+# $Id: Makefile,v 1.3 2005/12/03 03:23:51 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -7,7 +7,6 @@ VERSION=	5.0
 URL=		ftp://ftp.gnu.org/gnu/readline/
 SOURCE=		$(PACKAGE).tar.gz
 DESCRIPTION=	Readline provides a set of functions for use by applications that allow users to edit command lines as they are typed in.
-MAINTAINER=	Ruda Moura <ruda.moura@gmail.com>
 
 prep: retrive
 	tar zxvf $(SOURCE)
@@ -18,6 +17,5 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)
-	cd $(PACKAGE) ; make DESTDIR=$(CONTENTS) install
+	cd $(PACKAGE) ; make DESTDIR=$(INSTALLDIR) install
 	$(TOUCH) install
