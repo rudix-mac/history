@@ -1,7 +1,0 @@
-Machine: iBook G3 500 Mhz (aka Dual USB) with  192MB of RAM 
-OS: MacOSX 10.3 (Panther) + Xcode 1.5
-
-Package		Time
---------------+--------
-ccache-2.4	49s
-dictd-1.9.15	4min 10s
