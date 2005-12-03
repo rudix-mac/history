@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.3 2005/11/07 23:44:16 ruda Exp $
+# $Id: Makefile,v 1.4 2005/12/03 02:31:32 ruda Exp $
 
 include ../../misc/rules.mk
 
@@ -7,7 +7,8 @@ VERSION=	3.1.9
 SOURCE=		$(PACKAGE)-src.tar.bz2
 URL=		ftp://ftp.ncftp.com/ncftp
 DESCRIPTION=	NcFTP is a free set of programs that use the File Transfer Protocol.
-MAINTAINER=	Ruda Moura
+LICENSE=	$(PACKAGE)/doc/LICENSE.txt
+README=		$(PACKAGE)/README.txt
 
 prep: retrive
 	tar jxvf $(SOURCE)
@@ -18,11 +19,6 @@ build: prep
 	$(TOUCH) build
 
 install: build
-	mkdir -p $(CONTENTS)/usr
-	cd $(PACKAGE) ; make prefix=$(CONTENTS)/usr/local install
+	mkdir -p $(INSTALLDIR)/usr
+	cd $(PACKAGE) ; make prefix=$(INSTALLDIR)/usr/local install
 	$(TOUCH) install
-
-resources:
-	mkdir -p $(RESOURCES)
-	cp -f $(PACKAGE)/doc/LICENSE.txt $(RESOURCES)/License.txt
-	cp -f $(PACKAGE)/README.txt $(RESOURCES)/ReadMe.txt
